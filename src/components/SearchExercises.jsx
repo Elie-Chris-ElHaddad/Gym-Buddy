@@ -46,9 +46,9 @@ const SearchExercises = ( {setExercises,
   };
 
   return (
-    <Stack alignItems="center" mt="37px" justidyContent="center" p="20px">
+    <Stack alignItems="center" mt="37px" justifyContent="center" p="20px">
       <Typography
-        fontweight={700}
+        fontWeight={700}
         fontSize="40px"
         sx={{ lg: "44px", xs: "30px" }}
         mb="50px"

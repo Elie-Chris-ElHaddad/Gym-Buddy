@@ -1,87 +1,142 @@
-// src/components/Schedule.js
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import ScheduleForm from "../components/ScheduleForm";
+import ScheduleList from "../components/ScheduleList";
+import { fetchData, exerciseOptions } from "../utils/fetchData";
 import scheduleData from "../data/schedule.json";
+import "../Styles/Schedule.css";
 
 function Schedule() {
   const [schedules, setSchedules] = useState([]);
-  const [formData, setFormData] = useState({ id: null, title: "", date: "", time: "" });
+  const [formData, setFormData] = useState({
+    id: null,
+    title: "",
+    date: "",
+    time: "",
+    bodyPart: "",
+    exercises: [{ name: "", sets: "", reps: "" }]
+  });
   const [isEditing, setIsEditing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [exerciseOptionsList, setExerciseOptionsList] = useState([]);
+  const [expandedScheduleId, setExpandedScheduleId] = useState(null);
 
   useEffect(() => {
-    // Load initial data from JSON file
-    setSchedules(scheduleData);
+    const storedSchedules = JSON.parse(localStorage.getItem("schedules"));
+    if (storedSchedules && storedSchedules.length > 0) {
+      setSchedules(storedSchedules);
+    } else {
+      setSchedules(scheduleData);
+    }
   }, []);
 
-  // Handle form input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  useEffect(() => {
+    localStorage.setItem("schedules", JSON.stringify(schedules));
+  }, [schedules]);
 
-  // Add a new schedule
+  useEffect(() => {
+    const fetchExercises = async () => {
+      if (formData.bodyPart) {
+        try {
+          const exercisesData = await fetchData(
+            `https://exercisedb.p.rapidapi.com/exercises/bodyPart/${formData.bodyPart}`,
+            exerciseOptions
+          );
+          setExerciseOptionsList(Array.isArray(exercisesData) ? exercisesData : []);
+        } catch (error) {
+          console.error('Error fetching exercises:', error);
+          setExerciseOptionsList([]);
+        }
+      }
+    };
+    fetchExercises();
+  }, [formData.bodyPart]);
+
   const addSchedule = () => {
     setSchedules([...schedules, { ...formData, id: schedules.length + 1 }]);
-    setFormData({ id: null, title: "", date: "", time: "" });
+    resetForm();
   };
 
-  // Delete a schedule
+  const onShowMore = (id) => {
+    setExpandedScheduleId(expandedScheduleId === id ? null : id);
+  };
+
   const deleteSchedule = (id) => {
     setSchedules(schedules.filter((schedule) => schedule.id !== id));
   };
 
-  // Edit an existing schedule
   const editSchedule = (schedule) => {
     setFormData(schedule);
     setIsEditing(true);
   };
 
-  // Update an existing schedule
   const updateSchedule = () => {
     setSchedules(
       schedules.map((schedule) =>
         schedule.id === formData.id ? formData : schedule
       )
     );
-    setFormData({ id: null, title: "", date: "", time: "" });
+    resetForm();
+  };
+
+  const resetForm = () => {
+    setFormData({
+      id: null,
+      title: "",
+      date: "",
+      time: "",
+      bodyPart: "",
+      exercises: [{ name: "", sets: "", reps: "" }]
+    });
     setIsEditing(false);
   };
 
-  return (
-    <div>
-      <h1>Schedule</h1>
-      <ul>
-        {schedules.map((schedule) => (
-          <li key={schedule.id}>
-            <span>{schedule.title} - {schedule.date} at {schedule.time}</span>
-            <button onClick={() => editSchedule(schedule)}>Edit</button>
-            <button onClick={() => deleteSchedule(schedule.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+  const handleExerciseChange = (index, field, value) => {
+    const updatedExercises = formData.exercises.map((exercise, i) =>
+      i === index ? { ...exercise, [field]: value } : exercise
+    );
+    setFormData({ ...formData, exercises: updatedExercises });
+  };
 
-      <h2>{isEditing ? "Edit Schedule" : "Add Schedule"}</h2>
+  const addExerciseField = () => {
+    setFormData({
+      ...formData,
+      exercises: [...formData.exercises, { name: "", sets: "", reps: "" }]
+    });
+  };
+
+  const filteredSchedules = schedules.filter((schedule) =>
+    schedule.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div className="schedule-container">
+      <h1>Schedule</h1>
       <input
         type="text"
-        name="title"
-        placeholder="Title"
-        value={formData.title}
-        onChange={handleChange}
+        placeholder="Search by title"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="search-input"
       />
-      <input
-        type="date"
-        name="date"
-        value={formData.date}
-        onChange={handleChange}
+
+      <ScheduleList
+        schedules={filteredSchedules}
+        onEdit={editSchedule}
+        onDelete={deleteSchedule}
+        onShowMore={onShowMore}
+        expandedScheduleId={expandedScheduleId} // Pass expandedScheduleId here
       />
-      <input
-        type="time"
-        name="time"
-        value={formData.time}
-        onChange={handleChange}
+
+      <ScheduleForm
+        formData={formData}
+        isEditing={isEditing}
+        onFormChange={(data) => setFormData(data)}
+        onSubmit={isEditing ? updateSchedule : addSchedule}
+        addExerciseField={addExerciseField}
+        handleExerciseChange={handleExerciseChange}
+        exerciseOptionsList={exerciseOptionsList}
+        setFormData={setFormData}
       />
-      <button onClick={isEditing ? updateSchedule : addSchedule}>
-        {isEditing ? "Update" : "Add"}
-      </button>
     </div>
   );
 }

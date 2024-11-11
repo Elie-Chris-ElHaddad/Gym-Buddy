@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import './App.css';
+import './Styles/App.css';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
 import ExerciseDetail from './pages/ExerciseDetail';

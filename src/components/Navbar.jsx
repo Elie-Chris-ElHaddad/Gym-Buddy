@@ -10,11 +10,11 @@ const Navbar = () => {
         <Link to="/">
           <img src={Logo} alt="logo" style={{width:'60px', margin:'0,20px'}}/>
         </Link>
-        <Stack direction="row" gap="20px" fontSize="15px" qlignItems="flex-end" style={{ margin:'20px'}}>
+        <Stack direction="row" gap="20px" fontSize="15px" alignItems="flex-end" style={{ margin:'20px'}}>
           <Link to="/" style={{textDecoration:'none', color:'black',borderBottom:'3px solid red'}} >Home</Link>
-          <Link to="#exercises" style={{textDecoration:'none',color:'black'}}>Exercises</Link>
-          <Link to="#schedule" style={{textDecoration:'none',color:'black'}}>Schedule</Link>
-          <Link to="#shop" style={{textDecoration:'none',color:'black'}}>Shop</Link>
+          <a href="#exercises" style={{textDecoration:'none',color:'black'}}>Exercises</a>
+          <Link to="/schedule" style={{textDecoration:'none',color:'black'}}>Schedule</Link>
+          <Link to="/shop" style={{textDecoration:'none',color:'black'}}>Shop</Link>
         </Stack>
     </Stack>
     )
