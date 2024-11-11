@@ -16,7 +16,7 @@ mongoose.connect('mongodb://localhost:27017/schedulesDB', {
 .catch(err => console.error("Could not connect to MongoDB...", err));
 
 // Import routes
-const scheduleRoutes = require('./routes/scheduleRoutes');
+const scheduleRoutes = require('./routes/ScheduleRoutes');
 app.use('/api/schedules', scheduleRoutes);
 
 app.listen(PORT, () => {

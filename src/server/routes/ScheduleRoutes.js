@@ -1,7 +1,7 @@
 // routes/scheduleRoutes.js
 const express = require('express');
 const router = express.Router();
-const Schedule = require('../server/models/Schedule');
+const Schedule = require('../models/Schedule');
 
 // Create a new schedule
 router.post('/', async (req, res) => {
