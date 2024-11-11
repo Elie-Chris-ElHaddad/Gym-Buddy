@@ -5,7 +5,7 @@ function ScheduleList({ schedules, onEdit, onDelete, onShowMore, expandedSchedul
   return (
     <div className="schedule-list">
       {schedules.map((schedule) => (
-        <div key={schedule.id} className="schedule-item">
+        <div key={schedule.title} className="schedule-item">
           <h3>{schedule.title}</h3>
           <p>{schedule.date} at {schedule.time}</p>
 
@@ -18,8 +18,8 @@ function ScheduleList({ schedules, onEdit, onDelete, onShowMore, expandedSchedul
               <p>Body Part: {schedule.bodyPart}</p>
               <h4>Exercises</h4>
               <ul>
-                {schedule.exercises.map((exercise, index) => (
-                  <li key={index}>
+                {schedule.exercises.map((exercise) => (
+                  <li key={exercise.name}>
                     {exercise.name} - {exercise.sets} sets, {exercise.reps} reps
                   </li>
                 ))}
@@ -28,7 +28,7 @@ function ScheduleList({ schedules, onEdit, onDelete, onShowMore, expandedSchedul
           )}
 
           <button className="edit-btn" onClick={() => onEdit(schedule)}>Edit</button>
-          <button className="delete-btn" onClick={() => onDelete(schedule.id)}>Delete</button>
+          <button className="delete-btn" onClick={() => onDelete(schedule._id)}>Delete</button>
         </div>
       ))}
     </div>
