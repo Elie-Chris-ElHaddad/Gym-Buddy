@@ -1,45 +1,48 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import HorizontalScrollbar from "./HorizontalScrollbar";
+import HorizontalScrollbar from "./HorizontalScrollbar";  // Import HorizontalScrollbar component
+import { exerciseOptions, fetchData } from "../utils/fetchData";  // Import fetchData and exerciseOptions
 
-import { exerciseOptions, fetchData } from "../utils/fetchData";
-
-const SearchExercises = ( {setExercises,
-  bodyPart,setBodyPart}) => {
+// SearchExercises component receives setExercises, bodyPart, and setBodyPart as props
+const SearchExercises = ({ setExercises, bodyPart, setBodyPart }) => {
   
-  const [search, setSearch] = useState("");
-  const [bodyParts, setBodyParts] = useState([])
+  // State variables to manage search input and body parts data
+  const [search, setSearch] = useState("");  
+  const [bodyParts, setBodyParts] = useState([]); 
 
+  // useEffect hook to fetch body parts when the component mounts
   useEffect(() => {
-    const fetchExercisesData = async () =>{
+    const fetchExercisesData = async () => {
+      // Fetch body parts data from the API
       const bodyPartsData = await fetchData('https://exercisedb.p.rapidapi.com/exercises/bodyPartList', exerciseOptions);
 
-      setBodyParts(['all' , ...bodyPartsData]);
-
+      // Update body parts state by prepending 'all' to the list of body parts
+      setBodyParts(['all', ...bodyPartsData]);
     }
 
+    // Call the function to fetch body parts
     fetchExercisesData();
-  }, [])
+  }, []); // Empty dependency array means it will run once on mount
   
-  
+  // handleSearch function filters exercises based on the search input
   const handleSearch = async () => {
     if (search) {
+      // Fetch exercises data from the API
       const exercisesData = await fetchData(
-        "https://exercisedb.p.rapidapi.com/exercises",
+        "https://exercisedb.p.rapidapi.com/exercises", 
         exerciseOptions
       );
 
+      // Filter exercises based on the search input for name, target, equipment, and body part
       const searchedExercises = exercisesData.filter(
         (exercise) =>
-          // exercise.name.toLowerCase().includes(search) ||
-          // exercise.target.toLowerCase().includes(search) ||
-          // exercise.equipement.toLowerCase().includes(search) ||
-          // exercise.bodyPart.toLowerCase().includes(search)
           (exercise.name && exercise.name.toLowerCase().includes(search)) ||
-      (exercise.target && exercise.target.toLowerCase().includes(search)) ||
-      (exercise.equipment && exercise.equipment.toLowerCase().includes(search)) ||
-      (exercise.bodyPart && exercise.bodyPart.toLowerCase().includes(search))
+          (exercise.target && exercise.target.toLowerCase().includes(search)) ||
+          (exercise.equipment && exercise.equipment.toLowerCase().includes(search)) ||
+          (exercise.bodyPart && exercise.bodyPart.toLowerCase().includes(search))
       );
+
+      // Clear the search field and update the exercises state with filtered results
       setSearch("");
       setExercises(searchedExercises);
     }
@@ -47,6 +50,7 @@ const SearchExercises = ( {setExercises,
 
   return (
     <Stack alignItems="center" mt="37px" justifyContent="center" p="20px">
+      {/* Title section */}
       <Typography
         fontWeight={700}
         fontSize="40px"
@@ -58,6 +62,8 @@ const SearchExercises = ( {setExercises,
         Our Wide List <br />
         Of Exercises
       </Typography>
+      
+      {/* Search input box */}
       <Box position="relative" mb="72px">
         <TextField
           sx={{
@@ -67,11 +73,13 @@ const SearchExercises = ( {setExercises,
             borderRadius: "40px",
           }}
           height="76px"
-          value={search}
-          onChange={(e) => setSearch(e.target.value.toLowerCase())}
+          value={search}  // Bind the input value to the search state
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}  // Update the search state on change
           placeholder="Search Exercises"
           type="text"
         />
+        
+        {/* Search button */}
         <Button
           className="search-btn"
           sx={{
@@ -84,14 +92,20 @@ const SearchExercises = ( {setExercises,
             position: "absolute",
             right: "0",
           }}
-          onClick={handleSearch}
+          onClick={handleSearch}  // Trigger handleSearch when clicked
         >
           search
         </Button>
       </Box>
+      
+      {/* HorizontalScrollbar to display the list of body parts */}
       <Box sx={{position: 'relative', width:'100%', p:'20px'}}>
-          <HorizontalScrollbar data={bodyParts}
-          bodyPart={bodyPart} setBodyPart={setBodyPart} isBodyParts/>
+        <HorizontalScrollbar 
+          data={bodyParts}  // Pass body parts data to HorizontalScrollbar
+          bodyPart={bodyPart} 
+          setBodyPart={setBodyPart} 
+          isBodyParts  // Set flag to true for body parts selection
+        />
       </Box>
     </Stack>
   );

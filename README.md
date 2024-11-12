@@ -1,70 +1,127 @@
-# Getting Started with Create React App
+# My Gym Buddy
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+My Gym Buddy is a client-server application designed to help users track workout schedules, store exercise data, and manage workout details effectively. This project is structured as a React frontend connected to a Node.js/Express backend, with MongoDB as the database. This setup enables users to manage and log workouts with a smooth, efficient experience.
 
-In the project directory, you can run:
+## Table of Contents
 
-### `npm start`
+1. [Project Architecture](#1-project-architecture)
+2. [Database Design](#2-database-design)
+3. [API Endpoints](#3-api-endpoints)
+4. [Getting Started](#4-getting-started)
+5. [Features](#5-features)
+6. [Technologies Used](#6-technologies-used)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Project Architecture
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The application uses a **client-server architecture**:
+- **Frontend**: Built with React and Material UI for a responsive, user-friendly interface.
+- **Backend**: Powered by Node.js and Express, it provides a REST API to handle workout data.
+- **Database**: MongoDB stores workout schedules and exercises.
 
-### `npm test`
+### Folder Structure
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **`/client`**: Contains the frontend code (React components, styles, etc.).
+- **`/server`**: Contains the backend code (Express routes, database models, server configuration).
+- **`/models`**: MongoDB schemas for storing workout and exercise data.
+- **`/routes`**: Express route handlers for managing workout schedules.
 
-### `npm run build`
+## Database Design
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The database uses MongoDB to store **workout schedules** and **exercise data**.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Schedule**:
+  - `title` (String): The name of the workout session.
+  - `date` (String): Date of the workout.
+  - `time` (String): Time of the workout.
+  - `bodyPart` (String): Body part targeted.
+  - `exercises` (Array): List of exercises with `name`, `sets`, and `reps`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## API Endpoints
 
-### `npm run eject`
+The following REST API endpoints are available to manage workout schedules:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Schedule Routes (`/api/schedules`)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **Create a Schedule**
+   - **Method**: POST
+   - **Endpoint**: `/api/schedules`
+   - **Description**: Adds a new workout schedule to the database.
+  
+2. **Get All Schedules**
+   - **Method**: GET
+   - **Endpoint**: `/api/schedules`
+   - **Description**: Retrieves all saved workout schedules.
+  
+3. **Get a Schedule by ID**
+   - **Method**: GET
+   - **Endpoint**: `/api/schedules/:id`
+   - **Description**: Retrieves a specific schedule by its ID.
+  
+4. **Update a Schedule**
+   - **Method**: PUT
+   - **Endpoint**: `/api/schedules/:id`
+   - **Description**: Updates an existing schedule.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+5. **Delete a Schedule**
+   - **Method**: DELETE
+   - **Endpoint**: `/api/schedules/:id`
+   - **Description**: Deletes a specific schedule by ID.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Getting Started
 
-## Learn More
+### Prerequisites
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Node.js
+- MongoDB
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Installation
 
-### Code Splitting
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/username/my-gym-buddy.git
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2. **Install Dependencies**:
+   ```bash
+   cd my-gym-buddy
+   npm install
+   ```
 
-### Analyzing the Bundle Size
+3. **Run MongoDB**:
+   Ensure MongoDB is running locally on port `27017`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+4. **Start the Application**:
+   - **Frontend**: Runs on `http://localhost:3000`
+   - **Backend**: Runs on `http://localhost:5000`
+   ```bash
+   npm start
+   ```
 
-### Making a Progressive Web App
+### Scripts
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- **`npm start`**: Runs both the frontend and backend concurrently.
+- **`npm run client`**: Starts the React client.
+- **`npm run server`**: Starts the Express server.
 
-### Advanced Configuration
+## Features
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- **Workout Schedule Management**: Add, view, update, and delete workout schedules.
+- **Horizontal Scrolling for Exercises**: Smooth scrolling through exercise cards in the UI.
+- **Responsive UI**: Built with Material UI for a clean, user-friendly experience.
 
-### Deployment
+## Technologies Used
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- **Frontend**:
+  - React
+  - Material UI
+  - React Horizontal Scrolling Menu
 
-### `npm run build` fails to minify
+- **Backend**:
+  - Node.js
+  - Express
+  - Mongoose (MongoDB ODM)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Database**:
+  - MongoDB
