@@ -1,61 +1,104 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../Styles/Shop.css";
 
-// Shop component definition
 const Shop = () => {
-  // State hook to manage the cart, initialized as an empty array
-  const [cart, setCart] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [showAddProductForm, setShowAddProductForm] = useState(false);
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    description: "",
+    price: "",
+  });
 
-  // Array of products available in the shop
-  const products = [
-    { id: 1, name: "Protein Powder", description: "High-quality whey protein.", price: 29.99 },
-    { id: 2, name: "Creatine", description: "Supports muscle strength.", price: 19.99 },
-    { id: 3, name: "Pre-Workout", description: "Boosts energy and focus.", price: 24.99 },
-    { id: 4, name: "Multivitamins", description: "Complete daily multivitamin.", price: 15.99 },
-  ];
+  // Fetch products from the backend
+  useEffect(() => {
+    fetch("http://localhost:5000/api/products")
+      .then((response) => response.json())
+      .then((data) => setProducts(data))
+      .catch((error) => console.error("Error fetching products:", error));
+  }, []);
 
-  // Function to add a product to the cart
-  const addToCart = (product) => {
-    // Adds the selected product to the cart state
-    setCart([...cart, product]);
-    // Alert to confirm product has been added to the cart
-    alert(`${product.name} added to cart!`);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewProduct({ ...newProduct, [name]: value });
+  };
+
+  const addProduct = (e) => {
+    e.preventDefault();
+    console.log("Payload being sent:", newProduct); // Log the payload
+
+    fetch("http://localhost:5000/api/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newProduct), // Convert newProduct to JSON
+    })
+      .then((response) => response.json())
+      .then((createdProduct) => {
+        console.log("Product added successfully:", createdProduct); // Log the response
+        setProducts([...products, createdProduct]);
+        setShowAddProductForm(false);
+        setNewProduct({ name: "", description: "", price: "" });
+      })
+      .catch((error) => console.error("Error adding product:", error));
   };
 
   return (
     <div className="shop-container">
-      {/* Title of the shop */}
       <h1>Supplements Shop</h1>
 
-      {/* List of products available for purchase */}
+      <button
+        className="add-product-button"
+        onClick={() => setShowAddProductForm(!showAddProductForm)}
+      >
+        {showAddProductForm ? "Close Form" : "Add Product"}
+      </button>
+
+      {showAddProductForm && (
+        <form className="add-product-form" onSubmit={addProduct}>
+          <h2>Add a New Product</h2>
+          <input
+            type="text"
+            name="name"
+            placeholder="Product Name"
+            value={newProduct.name}
+            onChange={handleInputChange}
+            required
+          />
+          <textarea
+            name="description"
+            placeholder="Product Description"
+            value={newProduct.description}
+            onChange={handleInputChange}
+            required
+          />
+          <input
+            type="number"
+            name="price"
+            placeholder="Price"
+            value={newProduct.price}
+            onChange={handleInputChange}
+            required
+          />
+          <button type="submit">Add Product</button>
+        </form>
+      )}
+
       <div className="product-list">
         {products.map((product) => (
-          <div key={product.id} className="product-item">
-            {/* Display product name */}
+          <div key={product._id} className="product-card">
             <h2>{product.name}</h2>
-            {/* Display product description */}
             <p>{product.description}</p>
-            {/* Display product price, formatted to two decimal places */}
             <p>Price: ${product.price.toFixed(2)}</p>
-            {/* Button to add the product to the cart */}
-            <button onClick={() => addToCart(product)}>Buy Now</button>
+            <button onClick={() => alert(`${product.name} added to cart!`)}>
+              Add to Cart
+            </button>
           </div>
         ))}
       </div>
-
-      {/* Title for the shopping cart section */}
-      <h2>Shopping Cart</h2>
-
-      {/* List of items in the cart */}
-      <ul>
-        {cart.map((item, index) => (
-          // Display each item in the cart with its name and price
-          <li key={index}>{item.name} - ${item.price.toFixed(2)}</li>
-        ))}
-      </ul>
     </div>
   );
 };
 
-// Exporting Shop component for use in other parts of the application
 export default Shop;

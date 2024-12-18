@@ -27,6 +27,16 @@ mongoose.connect('mongodb://localhost:27017/schedulesDB', {
 const scheduleRoutes = require('./routes/ScheduleRoutes');
 app.use('/api/schedules', scheduleRoutes); // Prefixing routes with '/api/schedules'
 
+const shopRoutes = require('./routes/shopRoutes');
+app.use('/api/shop', shopRoutes);
+
+const ProductRoutes = require('./routes/ProductRoutes');
+app.use('/api/products', ProductRoutes);
+
+// Importing and using routes for handling user-related API requests
+const userRoutes = require('./routes/UserRoutes');
+app.use('/api/users', userRoutes); // Prefixing routes with '/api/users'
+
 // Starting the server and listening on the specified port
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

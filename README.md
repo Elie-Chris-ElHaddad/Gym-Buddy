@@ -1,5 +1,7 @@
 # My Gym Buddy
 
+Author: Elie-Chris El Haddad
+
 ## Overview
 
 My Gym Buddy is a client-server application designed to help users track workout schedules, store exercise data, and manage workout details effectively. This project is structured as a React frontend connected to a Node.js/Express backend, with MongoDB as the database. This setup enables users to manage and log workouts with a smooth, efficient experience.
